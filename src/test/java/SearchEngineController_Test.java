@@ -12,41 +12,41 @@ class SearchEngineController_Test {
 
     @Test
     public void test1() {
-        assertEquals(searchEngine.startQuery("(((soup)))"), List.of(r1, r4));
-        assertEquals(searchEngine.startQuery("((soup))"), List.of(r1, r4));
-        assertEquals(searchEngine.startQuery("(soup)"), List.of(r1, r4));
-        assertEquals(searchEngine.startQuery("soup"), List.of(r1, r4));
+        var expected = List.of(r1, r4);
+
+        assertEquals(searchEngine.startQuery("(((soup)))"), expected);
+        assertEquals(searchEngine.startQuery("((soup))"), expected);
+        assertEquals(searchEngine.startQuery("(soup)"), expected);
+        assertEquals(searchEngine.startQuery("soup"), expected);
     }
 
     @Test
     public void test2() {
-        assertEquals(searchEngine.startQuery("(((soup&fish)))"), List.of(r4));
-        assertEquals(searchEngine.startQuery("((soup&fish))"), List.of(r4));
-        assertEquals(searchEngine.startQuery("(soup&fish)"), List.of(r4));
-        assertEquals(searchEngine.startQuery("soup&fish"), List.of(r4));
+        var expected = List.of(r4);
+
+        assertEquals(searchEngine.startQuery("(((soup&fish)))"), expected);
+        assertEquals(searchEngine.startQuery("((soup&fish))"), expected);
+        assertEquals(searchEngine.startQuery("(soup&fish)"), expected);
+        assertEquals(searchEngine.startQuery("soup&fish"), expected);
     }
 
     @Test
     public void test3() {
-        assertEquals(searchEngine.startQuery("(((soup|salt)))"), List.of(r1, r4, r3));
-        assertEquals(searchEngine.startQuery("((soup|salt))"), List.of(r1, r4, r3));
-        assertEquals(searchEngine.startQuery("(soup|salt)"), List.of(r1, r4, r3));
-        assertEquals(searchEngine.startQuery("soup|salt"), List.of(r1, r4, r3));
+        var expected = List.of(r1, r4, r3);
+
+        assertEquals(searchEngine.startQuery("(((soup|salt)))"), expected);
+        assertEquals(searchEngine.startQuery("((soup|salt))"), expected);
+        assertEquals(searchEngine.startQuery("(soup|salt)"), expected);
+        assertEquals(searchEngine.startQuery("soup|salt"), expected);
     }
 
     @Test
     public void test4() {
-        assertEquals(searchEngine.startQuery(
-                "(((cake|(salt&fish))))"), List.of(r2, r4)
-        );
-        assertEquals(searchEngine.startQuery(
-                "((cake|(salt&fish)))"), List.of(r2, r4)
-        );
-        assertEquals(searchEngine.startQuery(
-                "(cake|(salt&fish))"), List.of(r2, r4)
-        );
-        assertEquals(searchEngine.startQuery(
-                "cake|(salt&fish)"), List.of(r2, r4)
-        );
+        var expected = List.of(r2, r4);
+
+        assertEquals(searchEngine.startQuery("(((cake|(salt&fish))))"), expected);
+        assertEquals(searchEngine.startQuery("((cake|(salt&fish)))"), expected);
+        assertEquals(searchEngine.startQuery("(cake|(salt&fish))"), expected);
+        assertEquals(searchEngine.startQuery("cake|(salt&fish)"), expected);
     }
 }
