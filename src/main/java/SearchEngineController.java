@@ -18,39 +18,9 @@ public class SearchEngineController {
         return result;
     }
 
-    private List<List<String>> getQueryResult(List<String> query, int start, int end) {
-        List<Query> queryList = new ArrayList<>();
-        List<QueryOperation> tokenList = new ArrayList<>();
-        QueryOperation and = new AndQueryOperation();
-        QueryOperation or = new OrQueryOperation();
-
-        for (int i = start; i < end; ++i) {
-            String el = query.get(i);
-            switch (el) {
-                case "|" -> tokenList.add(or);
-                case "&" -> tokenList.add(and);
-                case "(" -> {
-                    int j = getClosingBracket(query, i + 1, end);
-                    queryList.add(new Query(getQueryResult(query, i + 1, j)));
-                    i = j;
-                }
-                case ")" -> {}
-                default -> queryList.add(new Query(database).query(el));
-            }
-        }
-
-        if (queryList.size() == 0) {
-            return database;
-        }
-        Query result = queryList.get(0);
-        for (int i = 1; i < queryList.size(); ++i) {
-            result = tokenList.get(i - 1).query(result, queryList.get(i));
-        }
-        return result.database();
-    }
-
     private List<String> parse(String query) {
         ArrayList<String> out = new ArrayList<>();
+
         for (int i = 0; i < query.length(); ++i) {
             char letter = query.charAt(i);
             switch (letter) {
@@ -77,8 +47,59 @@ public class SearchEngineController {
         return out;
     }
 
+    private List<List<String>> getQueryResult(List<String> query, int start, int end) {
+        List<Query> queryList = new ArrayList<>();
+        List<QueryOperation> tokenList = new ArrayList<>();
+
+        processQuery(query, start, end, queryList, tokenList);
+        return mergeQueryResult(queryList, tokenList);
+    }
+
+    private void processQuery(
+            List<String> query,
+            int start,
+            int end,
+            List<Query> queryList,
+            List<QueryOperation> tokenList
+    ) {
+        QueryOperation and = new AndQueryOperation();
+        QueryOperation or = new OrQueryOperation();
+
+        for (int i = start; i < end; ++i) {
+            String el = query.get(i);
+            switch (el) {
+                case "|" -> tokenList.add(or);
+                case "&" -> tokenList.add(and);
+                case "(" -> {
+                    int j = getClosingBracket(query, i + 1, end);
+                    queryList.add(new Query(getQueryResult(query, i + 1, j)));
+                    i = j;
+                }
+                case ")" -> {
+                }
+                default -> queryList.add(new Query(database).query(el));
+            }
+        }
+    }
+
+    private List<List<String>> mergeQueryResult(
+            List<Query> queryList,
+            List<QueryOperation> tokenList
+    ) {
+        if (queryList.size() == 0) {
+            return database;
+        }
+
+        Query result = queryList.get(0);
+        for (int i = 1; i < queryList.size(); ++i) {
+            result = tokenList.get(i - 1).query(result, queryList.get(i));
+        }
+        return result.database();
+    }
+
     private int getClosingBracket(List<String> query, int start, int end) {
         int delta = 1;
+
         for (int i = start; i < end; ++i) {
             if (query.get(i).equals("(")) {
                 ++delta;
