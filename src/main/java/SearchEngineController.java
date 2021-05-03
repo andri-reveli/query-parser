@@ -15,7 +15,8 @@ public class SearchEngineController {
     }
 
     public List<List<String>> startQuery(String inputQuery) {
-        var result = getQueryResult(parse(inputQuery));
+        var queryList = parse(inputQuery);
+        var result = getQueryResult(queryList, 0, queryList.size());
 
 //        for (var list : result) {
 //            for (var el : list) {
@@ -26,11 +27,7 @@ public class SearchEngineController {
         return result;
     }
 
-    private List<List<String>> getQueryResult(List<String> query) {
-        return __getQueryResult(query, 0, query.size());
-    }
-
-    private List<List<String>> __getQueryResult(List<String> query, int start, int end) {
+    private List<List<String>> getQueryResult(List<String> query, int start, int end) {
         List<Query> queryList = new ArrayList<>();
         List<QueryOperation> tokenList = new ArrayList<>();
         QueryOperation and = new AndQueryOperation();
@@ -43,7 +40,7 @@ public class SearchEngineController {
                 case "&" -> tokenList.add(and);
                 case "(" -> {
                     int j = getClosingBracket(query, i + 1, end);
-                    queryList.add(new Query(__getQueryResult(query, i + 1, j)));
+                    queryList.add(new Query(getQueryResult(query, i + 1, j)));
                     i = j;
                 }
                 case ")" -> {}
