@@ -42,11 +42,32 @@ class SearchEngineController_Test {
 
     @Test
     public void test4() {
-        var expected = List.of(r2, r4);
+        var expected1 = List.of(r2, r4);
+        var expected2 = List.of(r4, r2);
 
-        assertEquals(searchEngine.startQuery("(((cake|(salt&fish))))"), expected);
-        assertEquals(searchEngine.startQuery("((cake|(salt&fish)))"), expected);
-        assertEquals(searchEngine.startQuery("(cake|(salt&fish))"), expected);
-        assertEquals(searchEngine.startQuery("cake|(salt&fish)"), expected);
+        assertEquals(searchEngine.startQuery("(((cake|(salt&fish))))"), expected1);
+        assertEquals(searchEngine.startQuery("((cake|(salt&fish)))"), expected1);
+        assertEquals(searchEngine.startQuery("(cake|(salt&fish))"), expected1);
+        assertEquals(searchEngine.startQuery("cake|(salt&fish)"), expected1);
+
+        assertEquals(searchEngine.startQuery("((((fish&salt)|cake)))"), expected2);
+        assertEquals(searchEngine.startQuery("(((fish&salt)|cake))"), expected2);
+        assertEquals(searchEngine.startQuery("((fish&salt)|cake)"), expected2);
+        assertEquals(searchEngine.startQuery("(fish&salt)|cake"), expected2);
+    }
+
+    @Test
+    public void test5() {
+        var expected = List.of(r4);
+
+        assertEquals(searchEngine.startQuery("((((cake|fish)&(salt&fish))))"), expected);
+        assertEquals(searchEngine.startQuery("(((cake|fish)&(salt&fish)))"), expected);
+        assertEquals(searchEngine.startQuery("((cake|fish)&(salt&fish))"), expected);
+        assertEquals(searchEngine.startQuery("(cake|fish)&(salt&fish)"), expected);
+
+        assertEquals(searchEngine.startQuery("((((salt&fish)&(fish|cake))))"), expected);
+        assertEquals(searchEngine.startQuery("(((salt&fish)&(fish|cake)))"), expected);
+        assertEquals(searchEngine.startQuery("((salt&fish)&(fish|cake))"), expected);
+        assertEquals(searchEngine.startQuery("(salt&fish)&(fish|cake)"), expected);
     }
 }
