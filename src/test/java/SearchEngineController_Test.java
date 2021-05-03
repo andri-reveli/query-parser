@@ -102,4 +102,19 @@ class SearchEngineController_Test {
                 "(butter|fish)|(salt&(cream|cake))"), expected2
         );
     }
+
+    @Test
+    public void test7() {
+        var expected = List.of(r4, r3);
+
+        assertEquals(searchEngine.startQuery("((((butter|potato)&salt)))"), expected);
+        assertEquals(searchEngine.startQuery("(((butter|potato)&salt))"), expected);
+        assertEquals(searchEngine.startQuery("((butter|potato)&salt)"), expected);
+        assertEquals(searchEngine.startQuery("(butter|potato)&salt"), expected);
+
+        assertEquals(searchEngine.startQuery("(((salt&(potato|butter))))"), expected);
+        assertEquals(searchEngine.startQuery("((salt&(potato|butter)))"), expected);
+        assertEquals(searchEngine.startQuery("(salt&(potato|butter))"), expected);
+        assertEquals(searchEngine.startQuery("salt&(potato|butter)"), expected);
+    }
 }
