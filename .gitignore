@@ -1,4 +1,2 @@
-target/classes/**
-target/generated-sources/**
-target/generated-test-sources/**
+target/
 .idea/
