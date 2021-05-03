@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class SearchEngineController {
-    private List<List<String>> database;
+    private final List<List<String>> database;
 
     public SearchEngineController() {
         database = new ArrayList<>();
