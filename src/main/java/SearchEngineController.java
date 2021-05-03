@@ -1,10 +1,7 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SearchEngineController {
     private List<List<String>> database;
-    private List<String> commands;
-    private List<Character> tokens;
 
     public SearchEngineController() {
         database = new ArrayList<>();
@@ -18,12 +15,6 @@ public class SearchEngineController {
         var queryList = parse(inputQuery);
         var result = getQueryResult(queryList, 0, queryList.size());
 
-//        for (var list : result) {
-//            for (var el : list) {
-//                System.out.print(el + " ");
-//            }
-//            System.out.println();
-//        }
         return result;
     }
 
@@ -56,22 +47,6 @@ public class SearchEngineController {
             result = tokenList.get(i - 1).query(result, queryList.get(i));
         }
         return result.database();
-    }
-
-    private List<List<String>> reduce(
-            String command1,
-            char token,
-            String command2,
-            List<List<String>> list
-    ) {
-        if (token == '|') {
-            return list.stream()
-                       .filter(el -> el.contains(command1) || el.contains(command2))
-                       .collect(Collectors.toList());
-        }
-        return list.stream()
-                   .filter(el -> el.contains(command1) && el.contains(command2))
-                   .collect(Collectors.toList());
     }
 
     private List<String> parse(String query) {
