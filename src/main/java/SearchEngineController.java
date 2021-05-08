@@ -87,7 +87,7 @@ public class SearchEngineController {
             List<QueryOperation> tokenList
     ) {
         if (queryList.size() == 0) {
-            return database;
+            return List.of();
         }
 
         Query result = queryList.get(0);
